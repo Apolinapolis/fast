@@ -1,0 +1,8 @@
+pytest
+fastapi
+email-validator
+python-dotenv
+requests
+pydantic
+fastapi-pagination
+uvicorn
