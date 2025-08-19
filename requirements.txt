@@ -6,3 +6,7 @@ requests
 pydantic
 fastapi-pagination
 uvicorn
+psycopg2-binary
+sqlalchemy
+sqlmodel
+fastapi-pagination
