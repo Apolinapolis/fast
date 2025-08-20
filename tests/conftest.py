@@ -4,6 +4,6 @@ import pytest
 
 dotenv.load_dotenv()
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def app_url():
     return os.getenv("APP_URL")

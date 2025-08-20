@@ -1,5 +1,6 @@
 import json
 import pytest
+import random
 import requests
 from http import HTTPStatus
 from app.models.User import User
@@ -14,9 +15,9 @@ def fill_test_data(app_url):
     for user in test_data_users:
         response = requests.post(f'{app_url}/api/users', json=user)
         test_users_list.append(response.json())
-
     user_ids = [user['id'] for user in test_users_list]
-    yield
+
+    yield user_ids
 
     for user_id in user_ids:
         requests.delete(f'{app_url}/api/users/{user_id}')
@@ -51,7 +52,7 @@ def test_user(app_url, fill_test_data):
         User.model_validate(user)
 
 
-@pytest.mark.parametrize("user_id", [1000, 13])
+@pytest.mark.parametrize("user_id", [999999, random.randint(100000, 999999)])
 def test_user_not_exist_values(app_url, user_id):
     response = requests.get(f"{app_url}/api/users/{user_id}")
     assert response.status_code == HTTPStatus.NOT_FOUND
