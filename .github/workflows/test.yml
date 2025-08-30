@@ -19,6 +19,17 @@ jobs:
       - run: pip install --upgrade -r requirements.txt
       - run: docker compose build
       - run: docker compose up -d
+      - name: Wait for app to be ready
+        run: |
+          for i in {1..10}; do
+            if curl -s http://127.0.0.1:8002/status; then
+              echo "App is up!"
+              break
+            fi
+            echo "Waiting for app..."
+            sleep 3
+          done
+
       - run: pytest tests --junit-xml=test-results.xml
         env:
           APP_URL: http://127.0.0.1:8002
