@@ -3,7 +3,7 @@ services:
   app:
     build: .
     environment:
-      DATABASE_ENGINE: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/postgres
+      DATABASE_ENGINE: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_USER}
     ports:
       - 8002:80
     depends_on:
@@ -15,7 +15,8 @@ services:
     restart: always
     shm_size: 128mb
     environment:
-      POSTGRES_PASSWORD: example
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
     ports:
       - "5432:5432"
     volumes:
