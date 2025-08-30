@@ -30,7 +30,7 @@ def update_user(user_id:int, payload:UserUpdate):
     with Session(engine) as s:
         db_user = s.get(User, user_id)
         if not db_user:
-            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail= 'user not found') #layer refactoring is needed
+            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail= 'user not found') #refactoring layer
         user_data = payload.model_dump(exclude_unset=True)
         db_user.sqlmodel_update(user_data)
         s.add(db_user)
