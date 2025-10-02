@@ -12,4 +12,5 @@
 - Docker + Docker Compose (инфраструктура)  
 
 ## Запуск
-- docker-compose up --build  
+- docker-compose up --build
+- Swagger-документация: http://127.0.0.1:8002/docs
