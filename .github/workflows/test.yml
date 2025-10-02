@@ -1,4 +1,3 @@
-
 on:
   pull_request:
     branches:
@@ -8,6 +7,9 @@ jobs:
   tests:
     name: Test app
     runs-on: ubuntu-latest
+    env:
+      POSTGRES_USER: ci
+      POSTGRES_PASSWORD: ci
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -15,8 +17,126 @@ jobs:
           python-version: '3.10'
           cache: 'pip'
       - run: pip install --upgrade -r requirements.txt
-      - run: docker compose up -d --build
-      - run: pytest tests
+      - run: docker compose build
+      - run: docker compose up -d
+      - run: sleep 5
+      - run: pytest tests --junit-xml=test-results.xml
+        env:
+          APP_URL: http://127.0.0.1:8002
 
       - run: docker compose logs app
         if: always()
+
+      - name: Surface failing tests
+        if: always()
+        uses: pmeier/pytest-results-action@main
+        with:
+          path: test-results.xml
+          summary: true
+          display-options: fEX
+          fail-on-empty: true
+          title: Test results
+
+
+
+#
+#on:
+#  pull_request:
+#    branches:
+#      - main
+#
+#jobs:
+#  tests:
+#    name: Test app
+#    runs-on: ubuntu-latest
+#    env:
+#      POSTGRES_USER: ci
+#      POSTGRES_PASSWORD: ci
+#    steps:
+#      - uses: actions/checkout@v4
+#      - uses: actions/setup-python@v5
+#        with:
+#          python-version: '3.10'
+#          cache: 'pip'
+#      - run: pip install --upgrade -r requirements.txt
+#      - run: docker compose build
+#      - run: docker compose up -d
+#      - run: sleep 5
+#      - run: pytest tests --junit-xml=test-results.xml
+#        env:
+#          APP_URL: http://127.0.0.1:8002
+#
+#      - run: docker compose logs app
+#        if: always()
+#
+#      - name: Surface failing tests
+#        if: always()
+#        uses: pmeier/pytest-results-action@main
+#        with:
+#          path: test-results.xml
+#          summary: true
+#          display-options: fEX
+#          fail-on-empty: true
+#          title: Test results
+
+
+
+#on:
+#  pull_request:
+#    branches:
+#      - main
+#
+#jobs:
+#  tests:
+#    name: Test app
+#    runs-on: ubuntu-latest
+#    env:
+#      POSTGRES_USER: ci
+#      POSTGRES_PASSWORD: ci
+#    steps:
+#      - uses: actions/checkout@v4
+#      - uses: actions/setup-python@v5
+#        with:
+#          python-version: '3.10'
+#          cache: 'pip'
+#      - run: pip install --upgrade -r requirements.txt
+#
+#      - name: Build and start containers
+#        run: |
+#          docker compose build
+#          docker compose up -d
+#
+#      - name: Wait for app to be ready
+#        run: |
+#          for i in {1..30}; do
+#            echo "⏳ Checking if app is ready... (try $i)"
+#            response=$(curl -s http://127.0.0.1:8002/status || true)
+#            echo "Response: $response"
+#            if echo "$response" | grep -q '"database": *true'; then
+#              echo "✅ App and DB are ready!"
+#              exit 0
+#            fi
+#            sleep 3
+#          done
+#          echo "❌ App did not become ready"
+#          docker compose logs
+#          exit 1
+#
+#      - name: Run tests
+#        run: pytest tests --junit-xml=test-results.xml
+#        env:
+#          APP_URL: http://127.0.0.1:8002
+#
+#      - name: Show app logs
+#        if: always()
+#        run: docker compose logs app
+#
+#      - name: Surface failing tests
+#        if: always()
+#        uses: pmeier/pytest-results-action@main
+#        with:
+#          path: test-results.xml
+#          summary: true
+#          display-options: fEX
+#          fail-on-empty: true
+#          title: Test results
