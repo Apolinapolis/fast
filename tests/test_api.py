@@ -5,14 +5,6 @@ import requests
 from http import HTTPStatus
 from app.models.User import User
 
-#тест на создание (подготовить тестовые данные)
-#тест на удаление (ид созданного пользователя)
-#тест на изменение (ид созданного пользователя)
-
-#тест 404 на удаленного пользователя
-#тест на 404 405 422
-#тест get после создания / удаления / изменения
-
 
 
 @pytest.fixture(scope='module')
@@ -70,3 +62,12 @@ def test_user_not_exist_values(app_url, user_id):
 def test_user_invalid_values(app_url, user_id):
     response = requests.get(f"{app_url}/api/users/{user_id}")
     assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+
+
+#тест на создание (подготовить тестовые данные)
+#тест на удаление (ид созданного пользователя)
+#тест на изменение (ид созданного пользователя)
+
+#тест 404 на удаленного пользователя
+#тест на 404 405 422
+#тест get после создания / удаления / изменения
